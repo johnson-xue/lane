@@ -6,6 +6,7 @@
 set -uo pipefail
 
 input=$(cat 2>/dev/null || echo "")
+printf '[lane remove] input: %s\n' "$input" >> /tmp/lane-remove-hook.log 2>/dev/null || true
 path=$(printf '%s' "$input" | python3 -c "
 import sys, json
 try:
