@@ -37,7 +37,7 @@ description: 通用 worktree 管理。建 worktree 时做检测/ignore/setup/基
 |------|------|
 | `lane sync` | 所有 worktree ahead/behind/dirty 总览 |
 | `lane doctor` | 健康检查（孤儿/无远程/detached/stale） |
-| `lane clean [--force]` | **按归属线**清理已合并（默认 dry run） |
+| `lane clean [--force]` | **按归属线**清理已合并 worktree + **残留分支清理**（.worktree-state 记录但 worktree 已移除的分支，如 ExitWorktree remove 残留；默认 dry run） |
 | `lane new <name> [base]` | 建 worktree + 可选 setup |
 | `lane list` | 列出 worktree |
 
@@ -70,9 +70,10 @@ setup: |
 
 - 临时 worktree（`.claude/worktrees/`）短生命周期，用完 `lane clean --force` 清理
 - 永久 worktree（兄弟目录 `<project>-<用途>`）用于切长期分支
-- `lane clean` 按归属线，不按单一 master/develop（修复 worktree-mgr 的 P0）
+- `lane clean` 按归属线，不按单一 master/develop（修复 worktree-mgr 的 P0）+ 清残留分支
 - 不靠 init 预生成配置；运行时探测 + 可选覆盖
-- hook 只做轻量（ignore/prune），核心 setup 归 Skill + worktree.yaml
+- **WorktreeCreate hook 接管创建+setup**（EnterWorktree 触发，hook 创建 worktree + 跑 setup + 返回 path）
+- **WorktreeRemove hook 不被 ExitWorktree remove 触发**（ExitWorktree 自己移除 worktree，`git worktree remove` 不删分支）→ ExitWorktree remove 后分支残留，靠 `lane clean` 清理（.worktree-state 记录）
 
 ## 常见自欺借口
 
