@@ -4,7 +4,6 @@
   "description": "Lane — 通用 worktree 管理插件。零配置安装即用：运行时探测项目分支/布局，多 worktree 批量管理（sync/doctor/clean）+ 单 worktree 生命周期 setup + 可选项目特化覆盖。Like summoner's lanes: parallel, isolated, swappable.",
   "author": "Jingshan Xue",
   "license": "MIT",
-  "hooks": "./hooks/hooks.json",
   "skills": [
     {
       "name": "lane",
