@@ -10,8 +10,8 @@
     {
       "name": "lane",
       "source": {
-        "source": "local",
-        "path": "/Users/admin/lane"
+        "source": "github",
+        "repo": "johnson-xue/lane"
       },
       "description": "通用 worktree 管理插件。零配置安装即用：运行时探测，多 worktree 批量管理 + 单 worktree lifecycle + 可选项目特化。",
       "version": "0.1.0",
