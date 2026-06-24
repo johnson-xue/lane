@@ -1,0 +1,12 @@
+{
+  "name": "lane",
+  "description": "通用 worktree 管理插件。零配置安装即用：运行时探测项目分支/布局，多 worktree 批量管理（sync/doctor/clean）+ 单 worktree 生命周期 setup + 可选项目特化覆盖。",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jingshan Xue"
+  },
+  "license": "MIT",
+  "keywords": ["worktree", "git", "isolation", "parallel"],
+  "hooks": "./hooks/hooks.json",
+  "skills": "./skills"
+}

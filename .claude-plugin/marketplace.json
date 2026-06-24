@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "lane-marketplace",
+  "description": "Lane — worktree management plugin marketplace",
+  "owner": {
+    "name": "Jingshan Xue",
+    "url": "https://github.com/johnson-xue"
+  },
+  "plugins": [
+    {
+      "name": "lane",
+      "source": {
+        "source": "local",
+        "path": "/Users/admin/lane"
+      },
+      "description": "通用 worktree 管理插件。零配置安装即用：运行时探测，多 worktree 批量管理 + 单 worktree lifecycle + 可选项目特化。",
+      "version": "0.1.0",
+      "license": "MIT",
+      "keywords": ["worktree", "git", "isolation", "parallel"]
+    }
+  ]
+}
