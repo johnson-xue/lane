@@ -145,6 +145,25 @@ cmd_clean() {
     load_config
     ok "Default: $DEFAULT_BRANCH | Long-lived: $LONG_LIVED_BRANCHES"
 
+    # 残留分支清理：.worktree-state 记录但 worktree 已移除的分支（ExitWorktree remove 残留，
+    # 因 ExitWorktree remove 不触发 WorktreeRemove hook、git worktree remove 不删分支）
+    local residue=0
+    if [[ -f "$REPO_ROOT/.worktree-state" ]]; then
+        local state_new=""
+        while IFS=' ' read -r ts wt_path wt_branch; do
+            [[ -z "$wt_path" ]] && continue
+            if git -C "$REPO_ROOT" worktree list --porcelain 2>/dev/null | awk '/^worktree/{print $2}' | grep -qxF "$wt_path"; then
+                state_new+="${ts} ${wt_path} ${wt_branch}"$'\n'
+            elif [[ -n "$wt_branch" && "$wt_branch" != "(detached)" ]] \
+                 && git -C "$REPO_ROOT" rev-parse --verify "$wt_branch" &>/dev/null; then
+                printf "  %bOK%b 残留分支: %s (worktree 已移除)\n" "$CGreen" "$CR" "$wt_branch"
+                if $force; then git -C "$REPO_ROOT" branch -D "$wt_branch" 2>/dev/null && ok "  Deleted: $wt_branch"; fi
+                residue=1
+            fi
+        done < "$REPO_ROOT/.worktree-state"
+        if $force; then printf '%s' "$state_new" > "$REPO_ROOT/.worktree-state"; fi
+    fi
+
     local candidates=() path branch lineage b is_long_lived
     while IFS='|' read -r path branch sha; do
         [[ "$path" == "$REPO_ROOT" || "$branch" == "(detached)" ]] && continue
@@ -162,8 +181,8 @@ cmd_clean() {
         fi
     done < <(_wt)
 
-    if [[ ${#candidates[@]} -eq 0 ]]; then
-        ok "No merged worktrees to clean."
+    if [[ ${#candidates[@]} -eq 0 && $residue -eq 0 ]]; then
+        ok "No merged worktrees or residue branches to clean."
         return
     fi
     if ! $force; then
