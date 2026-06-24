@@ -181,8 +181,11 @@ cmd_clean() {
         fi
     done < <(_wt)
 
-    if [[ ${#candidates[@]} -eq 0 && $residue -eq 0 ]]; then
-        ok "No merged worktrees or residue branches to clean."
+    if [[ ${#candidates[@]} -eq 0 ]]; then
+        if [[ $residue -eq 0 ]]; then
+            ok "No merged worktrees or residue branches to clean."
+        fi
+        git -C "$REPO_ROOT" worktree prune 2>/dev/null || true
         return
     fi
     if ! $force; then
